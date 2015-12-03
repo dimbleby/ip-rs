@@ -1,7 +1,7 @@
 [package]
 name = "ip"
 license = "MIT"
-version = "0.1.0"
+version = "1.0.0"
 authors = ["David Hotham"]
 description = """
 Provides the IpAddr enum, which can represent either an IPv4 or an IPv6 address
