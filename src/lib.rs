@@ -47,3 +47,9 @@ fn parse_ipv6() {
     let ipv6 = Ipv6Addr::from_str("2001:0db8::0001").unwrap();
     assert_eq!(IpAddr::V6(ipv6), parsed);
 }
+
+#[test]
+fn parse_fails() {
+    let parsed = IpAddr::from_str("nonsense");
+    assert!(parsed.is_err());
+}
