@@ -22,7 +22,7 @@ ip = "*"
 And in your crate root:
 
 ```rust
-extern crate c_types;
+extern crate ip;
 ```
 
 ## Contributing ##
