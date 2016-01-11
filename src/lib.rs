@@ -2,7 +2,7 @@
 //! or an IPv6 address.
 
 use std::fmt;
-use std::net::{AddrParseError, Ipv4Addr, Ipv6Addr};
+use std::net::{AddrParseError, Ipv4Addr, Ipv6Addr, SocketAddr, SocketAddrV4, SocketAddrV6};
 use std::str::FromStr;
 
 /// An IP address, either an IPv4 or IPv6 address.
@@ -31,6 +31,30 @@ impl FromStr for IpAddr {
             .or_else(|_| {
                 Ipv6Addr::from_str(s).map(|v6| IpAddr::V6(v6))
             })
+    }
+}
+
+/// Methods to convert between `IpAddr` and `std::net::SocketAddr`
+pub trait SocketAddrExt {
+    /// Creates a new socket address from the (ip, port) pair.
+    fn new(ip: IpAddr, port: u16) -> SocketAddr;
+    /// Returns the IP address associated with this socket address.
+    fn ip(&self) -> IpAddr;
+}
+
+impl SocketAddrExt for SocketAddr {
+    fn new(ip: IpAddr, port: u16) -> SocketAddr {
+        match ip {
+            IpAddr::V4(ipv4_addr) => SocketAddr::V4(SocketAddrV4::new(ipv4_addr, port)),
+            IpAddr::V6(ipv6_addr) => SocketAddr::V6(SocketAddrV6::new(ipv6_addr, port, 0, 0)),
+        }
+    }
+
+    fn ip(&self) -> IpAddr {
+        match *self {
+            SocketAddr::V4(socket_addr_v4) => IpAddr::V4(*socket_addr_v4.ip()),
+            SocketAddr::V6(socket_addr_v6) => IpAddr::V6(*socket_addr_v6.ip()),
+        }
     }
 }
 
