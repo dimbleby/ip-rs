@@ -2,7 +2,7 @@
 //! or an IPv6 address.
 
 use std::fmt;
-use std::net::{AddrParseError, Ipv4Addr, Ipv6Addr};
+use std::net::{AddrParseError, Ipv4Addr, Ipv6Addr, SocketAddr, SocketAddrV4, SocketAddrV6};
 use std::str::FromStr;
 
 /// An IP address, either an IPv4 or IPv6 address.
@@ -34,6 +34,30 @@ impl FromStr for IpAddr {
     }
 }
 
+/// Methods to convert between `IpAddr` and `std::net::SocketAddr`
+pub trait SocketAddrExt {
+    /// Creates a new socket address from the (ip, port) pair.
+    fn new(ip: IpAddr, port: u16) -> SocketAddr;
+    /// Returns the IP address associated with this socket address.
+    fn ip(&self) -> IpAddr;
+}
+
+impl SocketAddrExt for SocketAddr {
+    fn new(ip: IpAddr, port: u16) -> SocketAddr {
+        match ip {
+            IpAddr::V4(ipv4_addr) => SocketAddr::V4(SocketAddrV4::new(ipv4_addr, port)),
+            IpAddr::V6(ipv6_addr) => SocketAddr::V6(SocketAddrV6::new(ipv6_addr, port, 0, 0)),
+        }
+    }
+
+    fn ip(&self) -> IpAddr {
+        match *self {
+            SocketAddr::V4(socket_addr_v4) => IpAddr::V4(*socket_addr_v4.ip()),
+            SocketAddr::V6(socket_addr_v6) => IpAddr::V6(*socket_addr_v6.ip()),
+        }
+    }
+}
+
 #[test]
 fn parse_ipv4() {
     let parsed = IpAddr::from_str("192.168.0.1").unwrap();
@@ -53,3 +77,15 @@ fn parse_fails() {
     let parsed = IpAddr::from_str("nonsense");
     assert!(parsed.is_err());
 }
+
+#[test]
+fn to_from_socket_addr() {
+    let set_ip = IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0));
+    let set_port = 45666;
+    let socket_addr = <SocketAddr as SocketAddrExt>::new(set_ip, set_port);
+    let get_ip = <SocketAddr as SocketAddrExt>::ip(&socket_addr);
+    let get_port = socket_addr.port();
+    assert_eq!(set_ip, get_ip);
+    assert_eq!(set_port, get_port);
+}
+
