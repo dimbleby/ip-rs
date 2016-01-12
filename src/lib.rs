@@ -77,3 +77,15 @@ fn parse_fails() {
     let parsed = IpAddr::from_str("nonsense");
     assert!(parsed.is_err());
 }
+
+#[test]
+fn to_from_socket_addr() {
+    let set_ip = IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0));
+    let set_port = 45666;
+    let socket_addr = <SocketAddr as SocketAddrExt>::new(set_ip, set_port);
+    let get_ip = <SocketAddr as SocketAddrExt>::ip(&socket_addr);
+    let get_port = socket_addr.port();
+    assert_eq!(set_ip, get_ip);
+    assert_eq!(set_port, get_port);
+}
+
