@@ -59,28 +59,42 @@ impl SocketAddrExt for SocketAddr {
 }
 
 #[test]
+fn display_ipv4() {
+    let ipv4 = Ipv4Addr::new(192, 168, 0, 1);
+    let ip = IpAddr::V4(ipv4);
+    assert_eq!(format!("{}", ip), format!("{}", ipv4));
+}
+
+#[test]
+fn display_ipv6() {
+    let ipv6 = Ipv6Addr::new(0x2001, 0x0db8, 0, 0, 0, 0, 0, 1);
+    let ip = IpAddr::V6(ipv6);
+    assert_eq!(format!("{}", ip), format!("{}", ipv6));
+}
+
+#[test]
 fn parse_ipv4() {
-    let parsed = IpAddr::from_str("192.168.0.1").unwrap();
     let ipv4 = Ipv4Addr::from_str("192.168.0.1").unwrap();
-    assert_eq!(IpAddr::V4(ipv4), parsed);
+    let ip = IpAddr::from_str("192.168.0.1").unwrap();
+    assert_eq!(IpAddr::V4(ipv4), ip);
 }
 
 #[test]
 fn parse_ipv6() {
-    let parsed = IpAddr::from_str("2001:0db8::0001").unwrap();
     let ipv6 = Ipv6Addr::from_str("2001:0db8::0001").unwrap();
-    assert_eq!(IpAddr::V6(ipv6), parsed);
+    let ip = IpAddr::from_str("2001:0db8::0001").unwrap();
+    assert_eq!(IpAddr::V6(ipv6), ip);
 }
 
 #[test]
 fn parse_fails() {
-    let parsed = IpAddr::from_str("nonsense");
-    assert!(parsed.is_err());
+    let error = IpAddr::from_str("nonsense");
+    assert!(error.is_err());
 }
 
 #[test]
 fn to_from_socket_addr() {
-    let set_ip = IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0));
+    let set_ip = IpAddr::V4(Ipv4Addr::new(192, 168, 0, 1));
     let set_port = 45666;
     let socket_addr = <SocketAddr as SocketAddrExt>::new(set_ip, set_port);
     let get_ip = <SocketAddr as SocketAddrExt>::ip(&socket_addr);
@@ -88,4 +102,3 @@ fn to_from_socket_addr() {
     assert_eq!(set_ip, get_ip);
     assert_eq!(set_port, get_port);
 }
-
