@@ -1,5 +1,8 @@
 //! A crate that provides the `IpAddr` type, which can represent either an IPv4
 //! or an IPv6 address.
+//!
+//! Do not use this crate!  As of Rust 1.7.0, the `std::net::IpAddr` is
+//! stabilized - and should be preferred.
 
 use std::fmt;
 use std::net::{AddrParseError, Ipv4Addr, Ipv6Addr, SocketAddr, SocketAddrV4, SocketAddrV6};
