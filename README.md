@@ -12,7 +12,7 @@ As of Rust 1.7.0, the `std::net::IpAddr` is stabilized - and should be preferred
 
 ## Documentation ##
 
-API documentation is [here](http://dimbleby.github.io/ip-rs).
+API documentation is [here](https://docs.rs/ip).
 
 ## Installation ##
 
