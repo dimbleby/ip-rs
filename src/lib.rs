@@ -30,10 +30,9 @@ impl FromStr for IpAddr {
     type Err = AddrParseError;
 
     fn from_str(s: &str) -> Result<IpAddr, AddrParseError> {
-        Ipv4Addr::from_str(s).map(|v4| IpAddr::V4(v4))
-            .or_else(|_| {
-                Ipv6Addr::from_str(s).map(|v6| IpAddr::V6(v6))
-            })
+        Ipv4Addr::from_str(s)
+            .map(|v4| IpAddr::V4(v4))
+            .or_else(|_| Ipv6Addr::from_str(s).map(|v6| IpAddr::V6(v6)))
     }
 }
 
