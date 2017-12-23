@@ -10,6 +10,6 @@ Do not use this crate!  As of Rust 1.7.0, the `std::net::IpAddr` is stabilized -
 """
 homepage = "https://github.com/dimbleby/ip-rs"
 repository = "https://github.com/dimbleby/ip-rs"
-documentation = "http://dimbleby.github.io/ip-rs"
+documentation = "https://docs.rs/ip"
 readme = "README.md"
 keywords = ["IP"]
